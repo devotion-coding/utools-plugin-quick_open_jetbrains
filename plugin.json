@@ -1,0 +1,25 @@
+{
+  "logo": "./img/jetBrains_logo.jpeg",
+  "preload": "preload.js",
+  "features": [
+    {
+      "code": "all",
+      "explain": "快速打开 jetbrains 最近项目",
+      "logo": "./img/jetBrains_logo.jpeg",
+      "cmds": [
+        "History",
+        "KK",
+        "JetBrains",
+        "JetHistory"
+      ]
+    },
+    {
+      "code": "idea",
+      "explain": "快速打开 idea 最近项目",
+      "logo": "./img/idea_logo.png",
+      "cmds": [
+        "IDEA"
+      ]
+    }
+  ]
+}
