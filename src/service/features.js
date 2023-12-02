@@ -1,5 +1,4 @@
-// 插件功能选项
-let features = {
+exports.features = {
     all: {
         mode: "list",
         args: {
@@ -43,9 +42,3 @@ let features = {
         }
     }
 }
-window.exports = {
-    ...features
-}
-
-// 初始化
-window.initHelper.init()

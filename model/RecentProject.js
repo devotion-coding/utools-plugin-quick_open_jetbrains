@@ -1,4 +1,0 @@
-class RecentProject {
-    constructor(any) {
-    }
-}
