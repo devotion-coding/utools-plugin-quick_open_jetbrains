@@ -64,7 +64,8 @@ class InitService {
         Object.keys(this.channels).forEach(displayName => {
             let channel = this.channels[displayName]
             console.info({channel})
-            this.recentProjects[displayName] = []
+            let recentProjectList = []
+            this.recentProjects[displayName] = recentProjectList;
             let channelId = channel.channelId;
             let channelFile = globalData.config_path + "/channels/" + channelId + ".json";
             console.info(channelFile)
@@ -85,25 +86,57 @@ class InitService {
             }
 
             let recentProjectsFileData = fs.readFileSync(recentProjectsFile);
-            console.info("recentProjectsFileData from file:" + recentProjectsFileData.toString())
+            recentProjectsFileData = recentProjectsFileData.toString()
+            recentProjectsFileData = recentProjectsFileData.replaceAll("$USER_HOME$", "~")
+            var parser = new DOMParser();
+            var xmlDoc = parser.parseFromString(recentProjectsFileData, "text/xml");
 
-            recentProjectsFileData = this.parse_xml(recentProjectsFile)
-            console.info("recentProjectsFileData by parse:" + recentProjectsFileData)
+            let xml_entry = xmlDoc.getElementsByName("additionalInfo")[0].getElementsByTagName("map")[0].getElementsByTagName("entry")
+            console.info(xml_entry)
+            for (let index = 0; index < xml_entry.length; index++) {
+                let entry = xml_entry.item(index)
+                console.info("parse_xml", entry)
+                console.info(entry.getElementsByName("colorInfo"))
 
-
-            // recentProjectsFileData = xmlparser,toJson(recentProjectsFileData)
-            // xmlparser.toJson(recentProjectsFileData)
+                let activationTimestamp = this.getNodeByXmlPath(entry, ["N::activationTimestamp", "ARR::0", "ATR::value"])
+                // let projectOpenTimestamp = entry.getElementsByTagName("value")[0].getElementsByTagName("RecentProjectMetaInfo")[0].getElementsByName("projectOpenTimestamp")[0];
+                recentProjectList[index] = {
+                    "path": entry.getAttribute("key"),
+                    "name": entry.getAttribute("key").substring(entry.getAttribute("key").lastIndexOf("/")),
+                    "activationTimestamp": activationTimestamp ? activationTimestamp.getAttribute("value") : 0,
+                    // "projectOpenTimestamp": projectOpenTimestamp ? projectOpenTimestamp.getAttribute("value") : 0
+                };
+            }
+            getNodeByXmlPath(xml_entry, ["TN::value", "ARR::0", "TN::map", "ARR::0", "TN::entry"])
         })
     }
 
-    parse_xml(xmlStr) {
-        var xmldoc = new XMLDocument()
-
-        xmldoc.async = false;
-        xmldoc.load(xmlStr)
-
-        var root = xmldoc.documentElement;
-        console.info("parse_xml", root)
+    /**
+     * 通过xml path 获取元素
+     * @param node
+     * @param pathArr
+     * @returns {*}
+     */
+    getNodeByXmlPath(node, pathArr = []) {
+        let newNode = node
+        pathArr.forEach(path => {
+            console.info({"node:": node, "path": path})
+            if (path.startsWith("TN::")) {
+                path = path.replace("TN::", "");
+                newNode = newNode.getElementsByTagName(path)
+            } else if (path.startsWith("ARR::")) {
+                path = path.replace("ARR::", "");
+                newNode = newNode[Number.parseInt(path)]
+            } else if (path.startsWith("N::")) {
+                path = path.replace("N::", "");
+                newNode = newNode.getElementsByName(path)
+            } else if (path.startsWith("ATR::")) {
+                path = path.replace("ATR::", "");
+                return newNode.getAttribute(path)
+            }
+            console.info({"noded:": node, "path": path})
+        })
+        return newNode;
     }
 }
 
