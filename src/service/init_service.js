@@ -96,47 +96,34 @@ class InitService {
             for (let index = 0; index < xml_entry.length; index++) {
                 let entry = xml_entry.item(index)
                 console.info("parse_xml", entry)
-                console.info(entry.getElementsByName("colorInfo"))
 
-                let activationTimestamp = this.getNodeByXmlPath(entry, ["N::activationTimestamp", "ARR::0", "ATR::value"])
-                // let projectOpenTimestamp = entry.getElementsByTagName("value")[0].getElementsByTagName("RecentProjectMetaInfo")[0].getElementsByName("projectOpenTimestamp")[0];
+                let activationTimestamp = 0;
+                let projectOpenTimestamp = 0;
+                let optionList = entry.getElementsByTagName("value")[0].getElementsByTagName("RecentProjectMetaInfo")[0].getElementsByTagName("option")
+                console.info(optionList)
+                for (let i = 0; i < optionList.length; i++) {
+                    let option = optionList.item(i)
+                    console.info(option)
+                    let atr_name = option.getAttribute("name");
+                    let atr_value = option.getAttribute("value");
+                    if (atr_name === 'activationTimestamp') {
+                        activationTimestamp = atr_value
+                    } else if (atr_name === 'projectOpenTimestamp') {
+                        projectOpenTimestamp = atr_value
+                    }
+                }
+
                 recentProjectList[index] = {
+                    "channel": displayName,
                     "path": entry.getAttribute("key"),
-                    "name": entry.getAttribute("key").substring(entry.getAttribute("key").lastIndexOf("/")),
-                    "activationTimestamp": activationTimestamp ? activationTimestamp.getAttribute("value") : 0,
-                    // "projectOpenTimestamp": projectOpenTimestamp ? projectOpenTimestamp.getAttribute("value") : 0
+                    "name": entry.getAttribute("key").substring(entry.getAttribute("key").lastIndexOf("/") + 1),
+                    "activationTimestamp": activationTimestamp,
+                    "projectOpenTimestamp": projectOpenTimestamp
                 };
             }
-            getNodeByXmlPath(xml_entry, ["TN::value", "ARR::0", "TN::map", "ARR::0", "TN::entry"])
         })
-    }
-
-    /**
-     * 通过xml path 获取元素
-     * @param node
-     * @param pathArr
-     * @returns {*}
-     */
-    getNodeByXmlPath(node, pathArr = []) {
-        let newNode = node
-        pathArr.forEach(path => {
-            console.info({"node:": node, "path": path})
-            if (path.startsWith("TN::")) {
-                path = path.replace("TN::", "");
-                newNode = newNode.getElementsByTagName(path)
-            } else if (path.startsWith("ARR::")) {
-                path = path.replace("ARR::", "");
-                newNode = newNode[Number.parseInt(path)]
-            } else if (path.startsWith("N::")) {
-                path = path.replace("N::", "");
-                newNode = newNode.getElementsByName(path)
-            } else if (path.startsWith("ATR::")) {
-                path = path.replace("ATR::", "");
-                return newNode.getAttribute(path)
-            }
-            console.info({"noded:": node, "path": path})
-        })
-        return newNode;
+        console.info("初始化完成")
+        console.info(this.recentProjects)
     }
 }
 
