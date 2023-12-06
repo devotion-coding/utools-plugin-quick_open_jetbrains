@@ -112,5 +112,49 @@ exports.features = {
             },
             placeholder: "搜索"
         }
+    },
+    idea: {
+        mode: "list",
+        args: {
+            enter: (action, callbackSetList) => {
+                let recentProjectList = search("IntelliJ IDEA Ultimate", "")
+                console.info(recentProjectList)
+                callbackSetList(recentProjectList)
+            },
+            search: (action, searchWord, callbackSetList) => {
+                let recentProjectList = search("IntelliJ IDEA Ultimate", searchWord)
+                console.info(recentProjectList)
+                callbackSetList(recentProjectList)
+            },
+
+            select: (action, itemData, callbackSetList) => {
+                window.utools.hideMainWindow()
+                launchProjectFromApp(itemData.channel, itemData.path)
+                window.utools.outPlugin()
+            },
+            placeholder: "搜索"
+        }
+    },
+    data_grip: {
+        mode: "list",
+        args: {
+            enter: (action, callbackSetList) => {
+                let recentProjectList = search("DataGrip", "")
+                console.info(recentProjectList)
+                callbackSetList(recentProjectList)
+            },
+            search: (action, searchWord, callbackSetList) => {
+                let recentProjectList = search("DataGrip", searchWord)
+                console.info(recentProjectList)
+                callbackSetList(recentProjectList)
+            },
+
+            select: (action, itemData, callbackSetList) => {
+                window.utools.hideMainWindow()
+                launchProjectFromApp(itemData.channel, itemData.path)
+                window.utools.outPlugin()
+            },
+            placeholder: "搜索"
+        }
     }
 }

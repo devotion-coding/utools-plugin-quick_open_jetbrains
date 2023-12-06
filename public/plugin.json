@@ -7,9 +7,9 @@
       "explain": "快速打开 jetbrains 最近项目",
       "logo": "./logo/jet_brain_logo.png",
       "cmds": [
+        "JetBrains",
         "History",
         "KK",
-        "JetBrains",
         "JetHistory"
       ]
     },
@@ -19,6 +19,16 @@
       "logo": "./logo/ij_logo.png",
       "cmds": [
         "IDEA"
+      ]
+    },
+    {
+      "code": "data_grip",
+      "explain": "快速打开 data_grip 最近项目",
+      "logo": "./logo/dataGrid_logo.png",
+      "cmds": [
+        "DataGrip",
+        "data_grip",
+        "dg"
       ]
     }
   ]
