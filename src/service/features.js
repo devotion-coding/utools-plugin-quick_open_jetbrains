@@ -1,4 +1,5 @@
 const {initService} = require('./init_service')
+const {exec} = require('child_process');
 
 
 /**
@@ -53,6 +54,11 @@ function search(channel, search) {
     return recentProjectList
 }
 
+/**
+ * 获取logo
+ * @param channel
+ * @returns {string}
+ */
 function getLogo(channel) {
 
     switch (channel) {
@@ -65,8 +71,22 @@ function getLogo(channel) {
         case "CLion":
             return "./logo/cl_logo.png"
         default:
-
     }
+}
+
+/**
+ * 从应用打开项目
+ * @param channel
+ * @param path
+ */
+function launchProjectFromApp(channel, path) {
+    let channel_info = initService.channels[channel];
+    let launchCommand = channel_info.installLocation + "/" + channel_info.launchCommand;
+    launchCommand = launchCommand.replaceAll(" ", '\\ ');
+    console.info({"launchCommand": launchCommand})
+    exec(launchCommand + " " + path, (err, stdout, stderr) => {
+        console.info({"launch app": {err, stdout, stderr}})
+    })
 
 }
 
@@ -87,8 +107,7 @@ exports.features = {
 
             select: (action, itemData, callbackSetList) => {
                 window.utools.hideMainWindow()
-                const url = itemData.url
-                require('electron').shell.openExternal(url)
+                launchProjectFromApp(itemData.channel, itemData.path)
                 window.utools.outPlugin()
             },
             placeholder: "搜索"

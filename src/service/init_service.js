@@ -63,21 +63,20 @@ class InitService {
     #init_recentProjects() {
         Object.keys(this.channels).forEach(displayName => {
             let channel = this.channels[displayName]
-            console.info({channel})
+
             let recentProjectList = []
             this.recentProjects[displayName] = recentProjectList;
             let channelId = channel.channelId;
             let channelFile = globalData.config_path + "/channels/" + channelId + ".json";
-            console.info(channelFile)
+            console.info("channels:" + channelFile)
             let channelFileData = fs.readFileSync(channelFile);
             channelFileData = JSON.parse(channelFileData);
-            console.info(channelFileData)
+
             let ideaConfigPath = channelFileData.tool.extensions[0].defaultConfigDirectories["idea.config.path"];
             ideaConfigPath = ideaConfigPath.replace("$HOME", utools.getPath("home"))
-            console.info(ideaConfigPath)
 
             let recentProjectsFile = ideaConfigPath + "/options/recentProjects.xml"
-            console.info({recentProjectsFile})
+            console.info("recentProjectsFile:" + recentProjectsFile)
 
             // 判断文件是否存在
             if (!fs.existsSync(recentProjectsFile)) {
@@ -92,18 +91,15 @@ class InitService {
             var xmlDoc = parser.parseFromString(recentProjectsFileData, "text/xml");
 
             let xml_entry = xmlDoc.getElementsByName("additionalInfo")[0].getElementsByTagName("map")[0].getElementsByTagName("entry")
-            console.info(xml_entry)
+
             for (let index = 0; index < xml_entry.length; index++) {
                 let entry = xml_entry.item(index)
-                console.info("parse_xml", entry)
 
                 let activationTimestamp = 0;
                 let projectOpenTimestamp = 0;
                 let optionList = entry.getElementsByTagName("value")[0].getElementsByTagName("RecentProjectMetaInfo")[0].getElementsByTagName("option")
-                console.info(optionList)
                 for (let i = 0; i < optionList.length; i++) {
                     let option = optionList.item(i)
-                    console.info(option)
                     let atr_name = option.getAttribute("name");
                     let atr_value = option.getAttribute("value");
                     if (atr_name === 'activationTimestamp') {
@@ -122,8 +118,7 @@ class InitService {
                 };
             }
         })
-        console.info("初始化完成")
-        console.info(this.recentProjects)
+        console.info("初始化完成", this.recentProjects)
     }
 }
 
