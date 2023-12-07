@@ -3,14 +3,8 @@
  * @type {{STATE_JSON: string, WINDOWS_TOOLBOX_CONFIG_PATH: string, default_placeholder: string, MACOS_TOOLBOX_CONFIG_PATH: string, config_path: string}}
  */
 class GlobalData {
-    // mac config path
-    MACOS_TOOLBOX_CONFIG_PATH = "$HOME/Library/Application Support/JetBrains/Toolbox"
-
-    // window config path
-    WINDOWS_TOOLBOX_CONFIG_PATH = "$HOME/Library/Application Support/JetBrains/Toolbox"
-
     // 最终使用的config path
-    config_path = ""
+    config_path = "$APP_DATA/JetBrains/Toolbox"
 
     // state.json  path
     STATE_JSON = "$CONFIG_PATH/state.json"

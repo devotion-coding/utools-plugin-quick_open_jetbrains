@@ -27,26 +27,9 @@ class InitService {
     #init_config() {
 
         console.info("home:" + utools.getPath("home"))
-        globalData.MACOS_TOOLBOX_CONFIG_PATH = globalData.MACOS_TOOLBOX_CONFIG_PATH.replace("$HOME", utools.getPath("home"));
-        globalData.WINDOWS_TOOLBOX_CONFIG_PATH = globalData.WINDOWS_TOOLBOX_CONFIG_PATH.replace("$HOME", utools.getPath("home"));
-
-        if (utools.isWindows()) {
-            //windows平台
-            globalData.default_placeholder = "目前只支持mac，其他系统适配陆续开发中... ..."
-            globalData.OS = "Windows"
-            return
-        } else if (utools.isMacOS()) {
-            //mac
-            globalData.config_path = globalData.MACOS_TOOLBOX_CONFIG_PATH;
-            globalData.STATE_JSON = globalData.STATE_JSON.replace("$CONFIG_PATH", globalData.config_path);
-            globalData.OS = "Mac"
-        } else if (utools.isLinux()) {
-            //Linux平台
-            globalData.default_placeholder = "目前只支持mac，其他系统适配陆续开发中... ..."
-            globalData.OS = "Linux"
-            return;
-        }
-        console.info("当前系统：" + globalData.OS)
+        globalData.config_path = globalData.config_path.replace("$APP_DATA", utools.getPath("appData"));
+        console.info("config_path:" + globalData.config_path)
+        globalData.STATE_JSON = globalData.STATE_JSON.replace("$CONFIG_PATH", globalData.config_path);
 
         // 加载channels
         let fileData = fs.readFileSync(globalData.STATE_JSON);

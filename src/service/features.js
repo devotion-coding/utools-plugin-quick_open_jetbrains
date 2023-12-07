@@ -84,10 +84,10 @@ function launchProjectFromApp(channel, path) {
     let launchCommand = channel_info.installLocation + "/" + channel_info.launchCommand;
     launchCommand = launchCommand.replaceAll(" ", '\\ ');
     console.info({"launchCommand": launchCommand})
-    exec(launchCommand + " " + path, (err, stdout, stderr) => {
+
+    exec( launchCommand + " " + path, (err, stdout, stderr) => {
         console.info({"launch app": {err, stdout, stderr}})
     })
-
 }
 
 exports.features = {
