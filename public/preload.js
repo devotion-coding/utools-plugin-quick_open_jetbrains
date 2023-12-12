@@ -1,5 +1,5 @@
-const {initService} = require('../src/service/init_service')
-const features = require("../src/service/features")
+const {initService} = require('./service/init_service')
+const features = require("./service/features")
 
 
 
