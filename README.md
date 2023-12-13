@@ -11,7 +11,6 @@
 - 支持由 ToolBox 安装的 JetBrains 家族应用快速打开
 - 支持MacOS 、Windows
 - 内置默认路径，无需设置，即开即用
-
 - 插件基于 ToolBox 应用下 **state.json** 文件去推导其他应用安装路径和recentProjects.xml位置。
   -  windows下默认文件路径：%APPDATA%/JetBrains/Toolbox/state.json
   -  macOS下默认文件路径：~/Library/Application\ Support/JetBrains/Toolbox/state.json
@@ -52,7 +51,7 @@
 ## Todo list
 
 - [ ] 验证windows 下功能稳定性
-- [ ] 优化logo展示逻辑
+- [ ] 优化logo展示逻辑，期望读取本地安装目录中的logo文件
 
 
 ## License
