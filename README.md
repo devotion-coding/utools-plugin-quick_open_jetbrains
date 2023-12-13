@@ -46,7 +46,7 @@
 
 - 注： 
   - 功能关键字不区分大小写。
-  - 插件在macOS 下以验证通过一下应用，如其他应用有使用问题，请踢我
+  - 插件在macOS 下已验证通过以下应用，如其他应用有使用问题，请踢我
     - IntelliJ IDEA Ultimate.app
     - CLion Nova.app
     - GoLand.app
