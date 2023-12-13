@@ -35,6 +35,13 @@ class InitService {
         let fileData = fs.readFileSync(globalData.STATE_JSON);
         fileData = JSON.parse(fileData);
         fileData.tools.forEach(item => {
+
+            // 启动命令
+            item.launchCommand = item.installLocation + "/" + item.launchCommand;
+            item.launchCommand = item.launchCommand.replaceAll(" ", '\\ ');
+            // logo
+            item.logo_path = utools.getFileIcon(item.installLocation)
+
             this.channels[item.displayName] = item
         })
         console.info({"channels": this.channels})
@@ -94,6 +101,7 @@ class InitService {
 
                 recentProjectList[index] = {
                     "channel": displayName,
+                    "icon": channel.logo_path,
                     "path": entry.getAttribute("key"),
                     "name": entry.getAttribute("key").substring(entry.getAttribute("key").lastIndexOf("/") + 1),
                     "activationTimestamp": activationTimestamp,

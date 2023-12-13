@@ -49,29 +49,8 @@ function search(channel, search) {
     recentProjectList.forEach(item => {
         item.title = item.name
         item.description = item.path
-        item.icon = getLogo(item.channel)
     })
     return recentProjectList
-}
-
-/**
- * 获取logo
- * @param channel
- * @returns {string}
- */
-function getLogo(channel) {
-
-    switch (channel) {
-        case "DataGrip":
-            return "./logo/dataGrid_logo.png"
-        case "IntelliJ IDEA Ultimate":
-            return "./logo/ij_logo.png"
-        case "Writerside":
-            return "./logo/writerside.png"
-        case "CLion":
-            return "./logo/cl_logo.png"
-        default:
-    }
 }
 
 /**
@@ -81,11 +60,7 @@ function getLogo(channel) {
  */
 function launchProjectFromApp(channel, path) {
     let channel_info = initService.channels[channel];
-    let launchCommand = channel_info.installLocation + "/" + channel_info.launchCommand;
-    launchCommand = launchCommand.replaceAll(" ", '\\ ');
-    console.info({"launchCommand": launchCommand})
-
-    exec( launchCommand + " " + path, (err, stdout, stderr) => {
+    exec(channel_info.launchCommand + " " + path, (err, stdout, stderr) => {
         console.info({"launch app": {err, stdout, stderr}})
     })
 }
@@ -101,50 +76,6 @@ exports.features = {
             },
             search: (action, searchWord, callbackSetList) => {
                 let recentProjectList = search("", searchWord)
-                console.info(recentProjectList)
-                callbackSetList(recentProjectList)
-            },
-
-            select: (action, itemData, callbackSetList) => {
-                window.utools.hideMainWindow()
-                launchProjectFromApp(itemData.channel, itemData.path)
-                window.utools.outPlugin()
-            },
-            placeholder: "搜索"
-        }
-    },
-    idea: {
-        mode: "list",
-        args: {
-            enter: (action, callbackSetList) => {
-                let recentProjectList = search("IntelliJ IDEA Ultimate", "")
-                console.info(recentProjectList)
-                callbackSetList(recentProjectList)
-            },
-            search: (action, searchWord, callbackSetList) => {
-                let recentProjectList = search("IntelliJ IDEA Ultimate", searchWord)
-                console.info(recentProjectList)
-                callbackSetList(recentProjectList)
-            },
-
-            select: (action, itemData, callbackSetList) => {
-                window.utools.hideMainWindow()
-                launchProjectFromApp(itemData.channel, itemData.path)
-                window.utools.outPlugin()
-            },
-            placeholder: "搜索"
-        }
-    },
-    data_grip: {
-        mode: "list",
-        args: {
-            enter: (action, callbackSetList) => {
-                let recentProjectList = search("DataGrip", "")
-                console.info(recentProjectList)
-                callbackSetList(recentProjectList)
-            },
-            search: (action, searchWord, callbackSetList) => {
-                let recentProjectList = search("DataGrip", searchWord)
                 console.info(recentProjectList)
                 callbackSetList(recentProjectList)
             },
