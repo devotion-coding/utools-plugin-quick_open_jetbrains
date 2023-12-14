@@ -27,9 +27,13 @@ class InitService {
     #init_config() {
 
         console.info("home:" + utools.getPath("home"))
+        console.info("appData:" + utools.getPath("appData"))
         globalData.config_path = globalData.config_path.replace("$APP_DATA", utools.getPath("appData"));
         console.info("config_path:" + globalData.config_path)
         globalData.STATE_JSON = globalData.STATE_JSON.replace("$CONFIG_PATH", globalData.config_path);
+        if(utools.isWindows()){
+            globalData.STATE_JSON = globalData.STATE_JSON.replace("Roaming" , "Local")
+        }
 
         // 加载channels
         let fileData = fs.readFileSync(globalData.STATE_JSON);
@@ -41,6 +45,9 @@ class InitService {
             item.launchCommand = item.launchCommand.replaceAll(" ", '\\ ');
             // logo
             item.logo_path = utools.getFileIcon(item.installLocation)
+            if(utools.isWindows()){
+                item.logo_path = utools.getFileIcon(item.launchCommand)
+            }
 
             this.channels[item.displayName] = item
         })
@@ -58,13 +65,18 @@ class InitService {
             this.recentProjects[displayName] = recentProjectList;
             let channelId = channel.channelId;
             let channelFile = globalData.config_path + "/channels/" + channelId + ".json";
+            if(utools.isWindows()){
+                channelFile = channelFile.replace("Roaming" , "Local")
+            }
             console.info("channels:" + channelFile)
             let channelFileData = fs.readFileSync(channelFile);
             channelFileData = JSON.parse(channelFileData);
 
             let ideaConfigPath = channelFileData.tool.extensions[0].defaultConfigDirectories["idea.config.path"];
             ideaConfigPath = ideaConfigPath.replace("$HOME", utools.getPath("home"))
-
+            if(utools.isWindows()){
+                ideaConfigPath = ideaConfigPath.replace("$APPDATA", utools.getPath("appData"))
+            }
             let recentProjectsFile = ideaConfigPath + "/options/recentProjects.xml"
             console.info("recentProjectsFile:" + recentProjectsFile)
 
