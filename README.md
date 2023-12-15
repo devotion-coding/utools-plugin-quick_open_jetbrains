@@ -14,6 +14,9 @@
 - 插件基于 ToolBox 应用下 **state.json** 文件去推导其他应用安装路径和recentProjects.xml位置。
   -  windows下默认文件路径：%APPDATA%/JetBrains/Toolbox/state.json
   -  macOS下默认文件路径：~/Library/Application\ Support/JetBrains/Toolbox/state.json
+-------------
+- 注： 
+  - 插件功能验证均基于JetBrains 全家桶最新版本验证通过 ，历史版本可能存在兼容问题。
 
 ## 安装
 
@@ -44,6 +47,7 @@
 
 ![使用演示](doc_resource%2F7gds78g687ds6g8sd6g9.png)
 
+-------------
 - 注： 
   - 功能关键字不区分大小写。
   - 插件在macOS 下已验证通过以下应用，如其他应用有使用问题，请踢我
@@ -56,8 +60,10 @@
 
 ## Todo list
 
-- [x] 验证windows 下功能稳定性
-- [x] 优化logo展示逻辑，期望读取本地安装目录中的logo文件
+- [x] 【Feature】支持MacOs下 JetBrains 全家桶快速打开
+- [x] 【Optimize】优化logo展示逻辑，期望读取本地安装目录中的logo文件
+- [x] 【Feature】 支持Windows下 JetBrains 全家桶快速打开
+- [ ] 【Feature】 支持非JetBrains ToolBox 安装的 全家桶快速打开
 
 
 ## License
