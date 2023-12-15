@@ -56,7 +56,7 @@
 
 ## Todo list
 
-- [ ] 验证windows 下功能稳定性
+- [x] 验证windows 下功能稳定性
 - [x] 优化logo展示逻辑，期望读取本地安装目录中的logo文件
 
 
