@@ -69,7 +69,10 @@ exports.features = {
     all: {
         mode: "list",
         args: {
+            // 进入插件应用时调用
             enter: (action, callbackSetList) => {
+                // 每次进入时重新扫描项目列表
+                initService.init()
                 let recentProjectList = search("", "")
                 console.info(recentProjectList)
                 callbackSetList(recentProjectList)
@@ -85,7 +88,7 @@ exports.features = {
                 launchProjectFromApp(itemData.channel, itemData.path)
                 window.utools.outPlugin()
             },
-            placeholder: "搜索"
+            placeholder: "搜索项目（支持模糊匹配）"
         }
     }
 }
