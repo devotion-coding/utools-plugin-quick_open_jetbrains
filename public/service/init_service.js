@@ -31,8 +31,8 @@ class InitService {
         globalData.config_path = globalData.config_path.replace("$APP_DATA", utools.getPath("appData"));
         console.info("config_path:" + globalData.config_path)
         globalData.STATE_JSON = globalData.STATE_JSON.replace("$CONFIG_PATH", globalData.config_path);
-        if(utools.isWindows()){
-            globalData.STATE_JSON = globalData.STATE_JSON.replace("Roaming" , "Local")
+        if (utools.isWindows()) {
+            globalData.STATE_JSON = globalData.STATE_JSON.replace("Roaming", "Local")
         }
 
         // 加载channels
@@ -45,7 +45,7 @@ class InitService {
             item.launchCommand = item.launchCommand.replaceAll(" ", '\\ ');
             // logo
             item.logo_path = utools.getFileIcon(item.installLocation)
-            if(utools.isWindows()){
+            if (utools.isWindows()) {
                 item.logo_path = utools.getFileIcon(item.launchCommand)
             }
 
@@ -65,16 +65,33 @@ class InitService {
             this.recentProjects[displayName] = recentProjectList;
             let channelId = channel.channelId;
             let channelFile = globalData.config_path + "/channels/" + channelId + ".json";
-            if(utools.isWindows()){
-                channelFile = channelFile.replace("Roaming" , "Local")
+            if (utools.isWindows()) {
+                channelFile = channelFile.replace("Roaming", "Local")
             }
             console.info("channels:" + channelFile)
             let channelFileData = fs.readFileSync(channelFile);
             channelFileData = JSON.parse(channelFileData);
 
-            let ideaConfigPath = channelFileData.tool.extensions[0].defaultConfigDirectories["idea.config.path"];
+            let toolExtensions = channelFileData.tool.extensions;
+
+            // 判断 toolExtensions 是不是数组
+            if (!Array.isArray(toolExtensions)) {
+                return
+            }
+            let ideaConfigPath = toolExtensions.filter(x => {
+                return x.type === "intellij";
+            }).map(x => {
+                return x.defaultConfigDirectories["idea.config.path"];
+            }).find(x => {
+                return x !== undefined;
+            });
+            if (ideaConfigPath === undefined) {
+                console.info("ide:" + channelFileData.tool.toolName + " ideaConfigPath is undefined")
+                return
+            }
+
             ideaConfigPath = ideaConfigPath.replace("$HOME", utools.getPath("home"))
-            if(utools.isWindows()){
+            if (utools.isWindows()) {
                 ideaConfigPath = ideaConfigPath.replace("$APPDATA", utools.getPath("appData"))
             }
             let recentProjectsFile = ideaConfigPath + "/options/recentProjects.xml"
