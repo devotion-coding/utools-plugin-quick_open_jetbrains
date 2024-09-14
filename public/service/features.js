@@ -33,7 +33,7 @@ function search(channel, search) {
         let tmpRecentProjectList = []
         for (let i = 0; i < recentProjectList.length; i++) {
             let item = recentProjectList[i];
-            if (item.name.indexOf(search) > -1) {
+            if (item.name.toLowerCase().indexOf(search.toLowerCase()) > -1) {
                 tmpRecentProjectList.push(item)
             }
         }
