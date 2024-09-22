@@ -60,7 +60,12 @@ function search(channel, search) {
  */
 function launchProjectFromApp(channel, path) {
     let channel_info = initService.channels[channel];
-    exec(channel_info.launchCommand + " " + path, (err, stdout, stderr) => {
+
+    // exec(channel_info.launchCommand + " " + path,(err, stdout, stderr)=> {
+    //     console.info({"launch app": {err, stdout, stderr}})
+    // })
+
+    exec(`"${channel_info.launchCommand}"` + " " + path ,(err, stdout, stderr)=> {
         console.info({"launch app": {err, stdout, stderr}})
     })
 }
@@ -86,7 +91,7 @@ exports.features = {
             select: (action, itemData, callbackSetList) => {
                 window.utools.hideMainWindow()
                 launchProjectFromApp(itemData.channel, itemData.path)
-                window.utools.outPlugin()
+                // window.utools.outPlugin()
             },
             placeholder: "搜索项目（支持模糊匹配）"
         }
