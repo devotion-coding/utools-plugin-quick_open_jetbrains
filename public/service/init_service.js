@@ -42,7 +42,6 @@ class InitService {
 
             // 启动命令
             item.launchCommand = item.installLocation + "/" + item.launchCommand;
-            // item.launchCommand = item.launchCommand.replaceAll(" ", '\\ ');
             item.logo_path = utools.getFileIcon(item.installLocation)
             if (utools.isWindows()) {
                 item.logo_path = utools.getFileIcon(item.launchCommand)

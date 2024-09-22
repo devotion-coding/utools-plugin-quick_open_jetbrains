@@ -60,12 +60,8 @@ function search(channel, search) {
  */
 function launchProjectFromApp(channel, path) {
     let channel_info = initService.channels[channel];
-
-    // exec(channel_info.launchCommand + " " + path,(err, stdout, stderr)=> {
-    //     console.info({"launch app": {err, stdout, stderr}})
-    // })
-
-    exec(`"${channel_info.launchCommand}"` + " " + path ,(err, stdout, stderr)=> {
+    // 启动路径中如果包含空格则会导致 启动失败 这里使用双引号 保证启动命令解析正确
+    exec(`"${channel_info.launchCommand}"` + " " + `"${path}"` ,(err, stdout, stderr)=> {
         console.info({"launch app": {err, stdout, stderr}})
     })
 }
