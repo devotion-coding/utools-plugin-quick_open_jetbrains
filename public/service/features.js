@@ -61,7 +61,7 @@ function search(channel, search) {
 function launchProjectFromApp(channel, path) {
     let channel_info = initService.channels[channel];
     // 启动路径中如果包含空格则会导致 启动失败 这里使用双引号 保证启动命令解析正确
-    exec(`"${channel_info.launchCommand}"` + " " + path ,(err, stdout, stderr)=> {
+    exec(`"${channel_info.launchCommand}"` + " " + path, (err, stdout, stderr) => {
         console.info({"launch app": {err, stdout, stderr}})
     })
 }
@@ -73,10 +73,11 @@ exports.features = {
             // 进入插件应用时调用
             enter: (action, callbackSetList) => {
                 // 每次进入时重新扫描项目列表
-                initService.init()
-                let recentProjectList = search("", "")
-                console.info(recentProjectList)
-                callbackSetList(recentProjectList)
+                initService.init().then(res => {
+                    let recentProjectList = search("", "")
+                    console.info(recentProjectList)
+                    callbackSetList(recentProjectList)
+                })
             },
             search: (action, searchWord, callbackSetList) => {
                 let recentProjectList = search("", searchWord)
