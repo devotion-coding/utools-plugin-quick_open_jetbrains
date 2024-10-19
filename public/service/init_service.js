@@ -1,5 +1,6 @@
 const fs = require('fs')
 const {globalData} = require('../config/global_data')
+const {getInstalledApps} = require('../utils/getApps/index')
 
 
 /**
@@ -16,88 +17,102 @@ class InitService {
     /**
      * 初始化入口
      */
-    init() {
-        this.#init_config();
-        this.#init_recentProjects();
+    async init() {
+        await this.#init_config();
+        await this.#init_recentProjects();
     }
 
     /**
      * 初始化配置
      */
-    #init_config() {
+    async #init_config() {
 
-        console.info("home:" + utools.getPath("home"))
-        console.info("appData:" + utools.getPath("appData"))
-        globalData.config_path = globalData.config_path.replace("$APP_DATA", utools.getPath("appData"));
-        console.info("config_path:" + globalData.config_path)
-        globalData.STATE_JSON = globalData.STATE_JSON.replace("$CONFIG_PATH", globalData.config_path);
-        if (utools.isWindows()) {
-            globalData.STATE_JSON = globalData.STATE_JSON.replace("Roaming", "Local")
-        }
+        let targetAppNameList = ["IntelliJ IDEA", "PyCharm", "PhpStorm", "GoLand", "Rider", "CLion", "RustRover", "WebStorm", "RubyMine", "DataGrip", "ReSharper", "Fleet", "Aqua"]
+        await getInstalledApps()
+            .then(appList => {
+                // console.log(appList)
+                appList = appList
+                    .filter(app =>
+                        app.appName
+                    )
+                    .filter(app =>
+                        app.appIdentifier && !app.appIdentifier.startsWith("{")
+                    )
+                console.debug("appList:")
+                console.debug(appList)
+                // 找到目标应用
+                let targetAppList = []
+                for (const app of appList) {
+                    for (let targetAppName of targetAppNameList) {
+                        if (app.appName.indexOf(targetAppName) >= 0) {
+                            targetAppList.push(app)
+                            break
+                        }
+                    }
+                }
 
-        // 加载channels
-        let fileData = fs.readFileSync(globalData.STATE_JSON);
-        fileData = JSON.parse(fileData);
-        fileData.tools.forEach(item => {
+                // 构建应用信息
+                for (let targetApp of targetAppList) {
 
-            // 启动命令
-            item.launchCommand = item.installLocation + "/" + item.launchCommand;
-            item.logo_path = utools.getFileIcon(item.installLocation)
-            if (utools.isWindows()) {
-                item.logo_path = utools.getFileIcon(item.launchCommand)
-            }
+                    let appName = '';
+                    let installLocation = '';
+                    let appInfoFilePath = '';
+                    let dataDirectoryName = '';
+                    let launchCommand = '';
+                    let logo_path = '';
+                    if (utools.isWindows()) {
+                        // windows
+                        appName = targetApp.appName + ".app";
+                        installLocation = targetApp.InstallLocation
+                        appInfoFilePath = installLocation + '/product-info.json'
+                        let appInfoFileData = fs.readFileSync(appInfoFilePath);
+                        appInfoFileData = JSON.parse(appInfoFileData)
+                        dataDirectoryName = appInfoFileData.dataDirectoryName;
+                        launchCommand = targetApp.DisplayIcon
+                        logo_path = utools.getFileIcon(launchCommand)
+                    } else {
+                        // mac
+                        appName = targetApp.appName;
+                        installLocation = targetApp.app_dir + "/" + appName;
+                        appInfoFilePath = installLocation + "/Contents/Resources/product-info.json"
+                        let appInfoFileData = fs.readFileSync(appInfoFilePath);
+                        appInfoFileData = JSON.parse(appInfoFileData)
+                        dataDirectoryName = appInfoFileData.dataDirectoryName;
+                        launchCommand = installLocation + "/Contents/MacOS/" + appInfoFileData.launch[0].launcherPath.replace("../MacOS/", "");
+                        logo_path = utools.getFileIcon(installLocation)
+                    }
 
-            this.channels[item.displayName] = item
-        })
-        console.info({"channels": this.channels})
+                    let channelInfo = {
+                        "displayName": appName,
+                        "installLocation": installLocation,
+                        "dataDirectoryName": dataDirectoryName,
+                        "launchCommand": launchCommand,
+                        "logo_path": logo_path
+                    };
+                    this.channels[appName] = channelInfo
+                }
+                console.debug("channels:")
+                console.debug(this.channels)
+            })
     }
 
     /**
      * 初始化项目列表
      */
     #init_recentProjects() {
+        console.debug("初始化最近项目列表")
         Object.keys(this.channels).forEach(displayName => {
             let channel = this.channels[displayName]
 
             let recentProjectList = []
             this.recentProjects[displayName] = recentProjectList;
-            let channelId = channel.channelId;
-            let channelFile = globalData.config_path + "/channels/" + channelId + ".json";
-            if (utools.isWindows()) {
-                channelFile = channelFile.replace("Roaming", "Local")
-            }
-            console.info("channels:" + channelFile)
-            let channelFileData = fs.readFileSync(channelFile);
-            channelFileData = JSON.parse(channelFileData);
 
-            let toolExtensions = channelFileData.tool.extensions;
-
-            // 判断 toolExtensions 是不是数组
-            if (!Array.isArray(toolExtensions)) {
-                return
-            }
-            let ideaConfigPath = toolExtensions.filter(x => {
-                return x.type === "intellij";
-            }).map(x => {
-                return x.defaultConfigDirectories["idea.config.path"];
-            }).find(x => {
-                return x !== undefined;
-            });
-            if (ideaConfigPath === undefined) {
-                console.info("ide:" + channelFileData.tool.toolName + " ideaConfigPath is undefined")
-                return
-            }
-
-            ideaConfigPath = ideaConfigPath.replace("$HOME", utools.getPath("home"))
-            if (utools.isWindows()) {
-                ideaConfigPath = ideaConfigPath.replace("$APPDATA", utools.getPath("appData"))
-            }
-            let recentProjectsFile = ideaConfigPath + "/options/recentProjects.xml"
-            console.info("recentProjectsFile:" + recentProjectsFile)
+            let recentProjectsFile = utools.getPath("appData").replace("\ ", " ") + "/JetBrains/" + channel.dataDirectoryName + "/options/recentProjects.xml"
+            console.debug("recentProjectsFile: " + recentProjectsFile)
 
             // 判断文件是否存在
             if (!fs.existsSync(recentProjectsFile)) {
-                console.info("文件不存在:" + recentProjectsFile)
+                console.debug("文件不存在:" + recentProjectsFile)
                 return
             }
 
@@ -126,6 +141,10 @@ class InitService {
                     }
                 }
 
+                if (utools.isWindows() && entry.getAttribute("key").startsWith("~")) {
+                    entry.setAttribute("key", entry.getAttribute("key").replace("~", utools.getPath("home")))
+                }
+
                 recentProjectList[index] = {
                     "channel": displayName,
                     "icon": channel.logo_path,
@@ -136,7 +155,7 @@ class InitService {
                 };
             }
         })
-        console.info("初始化完成", this.recentProjects)
+        console.debug("初始化完成", this.recentProjects)
     }
 }
 

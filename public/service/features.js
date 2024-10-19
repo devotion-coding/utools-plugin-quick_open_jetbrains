@@ -8,7 +8,7 @@ const {exec} = require('child_process');
  * @param search
  */
 function search(channel, search) {
-    console.info("init_data", initService.recentProjects)
+    console.debug("init_data", initService.recentProjects)
 
     // 获取列表
     let recentProjectList = [];
@@ -26,7 +26,7 @@ function search(channel, search) {
                 })
             })
     }
-    console.info("recentProjectList", recentProjectList)
+    console.debug("recentProjectList", recentProjectList)
 
     // 查询对应数据
     if (search && search !== '') {
@@ -61,8 +61,8 @@ function search(channel, search) {
 function launchProjectFromApp(channel, path) {
     let channel_info = initService.channels[channel];
     // 启动路径中如果包含空格则会导致 启动失败 这里使用双引号 保证启动命令解析正确
-    exec(`"${channel_info.launchCommand}"` + " " + path ,(err, stdout, stderr)=> {
-        console.info({"launch app": {err, stdout, stderr}})
+    exec(`"${channel_info.launchCommand}"` + " " + path, (err, stdout, stderr) => {
+        console.debug({"launch app": {err, stdout, stderr}})
     })
 }
 
@@ -73,14 +73,15 @@ exports.features = {
             // 进入插件应用时调用
             enter: (action, callbackSetList) => {
                 // 每次进入时重新扫描项目列表
-                initService.init()
-                let recentProjectList = search("", "")
-                console.info(recentProjectList)
-                callbackSetList(recentProjectList)
+                initService.init().then(res => {
+                    let recentProjectList = search("", "")
+                    console.debug(recentProjectList)
+                    callbackSetList(recentProjectList)
+                })
             },
             search: (action, searchWord, callbackSetList) => {
                 let recentProjectList = search("", searchWord)
-                console.info(recentProjectList)
+                console.debug(recentProjectList)
                 callbackSetList(recentProjectList)
             },
 
