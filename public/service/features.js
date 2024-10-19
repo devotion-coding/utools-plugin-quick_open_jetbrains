@@ -88,7 +88,7 @@ exports.features = {
             select: (action, itemData, callbackSetList) => {
                 window.utools.hideMainWindow()
                 launchProjectFromApp(itemData.channel, itemData.path)
-                window.utools.outPlugin()
+                // window.utools.outPlugin()
             },
             placeholder: "搜索项目（支持模糊匹配）"
         }

@@ -30,7 +30,14 @@ class InitService {
         let targetAppNameList = ["IntelliJ IDEA", "PyCharm", "PhpStorm", "GoLand", "Rider", "CLion", "RustRover", "WebStorm", "RubyMine", "DataGrip", "ReSharper", "Fleet", "Aqua"]
         await getInstalledApps()
             .then(appList => {
-                console.log(appList)
+                // console.log(appList)
+                appList = appList
+                    .filter(app =>
+                        app.appName
+                    )
+                    .filter(app => !app.appIdentifier.startsWith("{"))
+                console.debug("appList:")
+                console.debug(appList)
                 // 找到目标应用
                 let targetAppList = []
                 for (const app of appList) {
@@ -46,16 +53,31 @@ class InitService {
                 for (let targetApp of targetAppList) {
 
                     let appName = targetApp.appName + ".app";
-                    let installLocation = targetApp.app_dir + "/" + appName;
-                    let appInfoFilePath = installLocation + "/Contents/Resources/product-info.json"
-                    let appInfoFileData = fs.readFileSync(appInfoFilePath);
-                    appInfoFileData = JSON.parse(appInfoFileData)
-                    let dataDirectoryName = appInfoFileData.dataDirectoryName;
-                    let launchCommand = installLocation + "/Contents/MacOS/" + appInfoFileData.launch[0].launcherPath.replace("../MacOS/", "");
-                    let logo_path = utools.getFileIcon(installLocation)
+                    let installLocation = '';
+                    let appInfoFilePath = '';
+                    let dataDirectoryName = '';
+                    let launchCommand = '';
+                    let logo_path = '';
                     if (utools.isWindows()) {
+                        // windows
+                        installLocation = targetApp.InstallLocation
+                        appInfoFilePath = installLocation + '/product-info.json'
+                        let appInfoFileData = fs.readFileSync(appInfoFilePath);
+                        appInfoFileData = JSON.parse(appInfoFileData)
+                        dataDirectoryName = appInfoFileData.dataDirectoryName;
+                        launchCommand = targetApp.DisplayIcon
                         logo_path = utools.getFileIcon(launchCommand)
+                    } else {
+                        // mac
+                        installLocation = targetApp.app_dir + "/" + appName;
+                        appInfoFilePath = installLocation + "/Contents/Resources/product-info.json"
+                        let appInfoFileData = fs.readFileSync(appInfoFilePath);
+                        appInfoFileData = JSON.parse(appInfoFileData)
+                        dataDirectoryName = appInfoFileData.dataDirectoryName;
+                        launchCommand = installLocation + "/Contents/MacOS/" + appInfoFileData.launch[0].launcherPath.replace("../MacOS/", "");
+                        logo_path = utools.getFileIcon(installLocation)
                     }
+
                     let channelInfo = {
                         "displayName": appName,
                         "installLocation": installLocation,
@@ -63,10 +85,10 @@ class InitService {
                         "launchCommand": launchCommand,
                         "logo_path": logo_path
                     };
-                    console.log(channelInfo)
                     this.channels[appName] = channelInfo
                 }
-                console.info({"channels": this.channels})
+                console.debug("channels:")
+                console.info(this.channels)
             })
     }
 
@@ -74,8 +96,7 @@ class InitService {
      * 初始化项目列表
      */
     #init_recentProjects() {
-        console.info("初始化最近项目列表")
-        console.info({"channels": this.channels})
+        console.debug("初始化最近项目列表")
         Object.keys(this.channels).forEach(displayName => {
             let channel = this.channels[displayName]
 
@@ -83,7 +104,7 @@ class InitService {
             this.recentProjects[displayName] = recentProjectList;
 
             let recentProjectsFile = utools.getPath("appData").replace("\ ", " ") + "/JetBrains/" + channel.dataDirectoryName + "/options/recentProjects.xml"
-            console.info("recentProjectsFile:" + recentProjectsFile)
+            console.debug("recentProjectsFile: " + recentProjectsFile)
 
             // 判断文件是否存在
             if (!fs.existsSync(recentProjectsFile)) {
@@ -114,6 +135,10 @@ class InitService {
                     } else if (atr_name === 'projectOpenTimestamp') {
                         projectOpenTimestamp = atr_value
                     }
+                }
+
+                if (utools.isWindows() && entry.getAttribute("key").startsWith("~")) {
+                    entry.setAttribute("key", entry.getAttribute("key").replace("~", utools.getPath("home")))
                 }
 
                 recentProjectList[index] = {
