@@ -35,7 +35,9 @@ class InitService {
                     .filter(app =>
                         app.appName
                     )
-                    .filter(app => !app.appIdentifier.startsWith("{"))
+                    .filter(app =>
+                        app.appIdentifier && !app.appIdentifier.startsWith("{")
+                    )
                 console.debug("appList:")
                 console.debug(appList)
                 // 找到目标应用
@@ -52,7 +54,7 @@ class InitService {
                 // 构建应用信息
                 for (let targetApp of targetAppList) {
 
-                    let appName = targetApp.appName + ".app";
+                    let appName = '';
                     let installLocation = '';
                     let appInfoFilePath = '';
                     let dataDirectoryName = '';
@@ -60,6 +62,7 @@ class InitService {
                     let logo_path = '';
                     if (utools.isWindows()) {
                         // windows
+                        appName = targetApp.appName + ".app";
                         installLocation = targetApp.InstallLocation
                         appInfoFilePath = installLocation + '/product-info.json'
                         let appInfoFileData = fs.readFileSync(appInfoFilePath);
@@ -69,6 +72,7 @@ class InitService {
                         logo_path = utools.getFileIcon(launchCommand)
                     } else {
                         // mac
+                        appName = targetApp.appName;
                         installLocation = targetApp.app_dir + "/" + appName;
                         appInfoFilePath = installLocation + "/Contents/Resources/product-info.json"
                         let appInfoFileData = fs.readFileSync(appInfoFilePath);
