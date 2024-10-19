@@ -21,7 +21,7 @@
 ## 安装
 
 - 应用市场安装
-    - 打开插件应用市场搜索 **JetBrains Quick Open**
+    - 打开插件应用市场搜索 **JetBrains IDE Quick Open**
 
 ![应用市场安装](doc_resource%2F78dfg765df65g7ds5.png)
 
