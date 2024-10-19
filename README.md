@@ -8,12 +8,10 @@
 
 ## 功能特性
 
-- 支持由 ToolBox 安装的 JetBrains 家族应用快速打开
+- 支持JetBrains IDE 全家桶应用快速打开
 - 支持MacOS 、Windows、linux
 - 内置默认路径，无需设置，即开即用
-- 插件基于 ToolBox 应用下 **state.json** 文件去推导其他应用安装路径和recentProjects.xml位置。
-    - windows下默认文件路径：%APPDATA%/JetBrains/Toolbox/state.json
-    - macOS下默认文件路径：~/Library/Application\ Support/JetBrains/Toolbox/state.json
+- 插件通过扫描本机应用列表读取应用安装路径和recentProjects.xml位置。
 
 -------------
 
@@ -41,8 +39,9 @@
 
 ## 快速开始
 
-- 快速打开 ToolBox 下所有最近项目列表
+- 快速打开 JetBrains IDE 全家桶最近项目列表
     - 功能关键字
+        - IDE
         - JetBrains
         - history
         - kk
@@ -67,7 +66,7 @@
 - [x] 【Feature】支持MacOs下 JetBrains 全家桶快速打开
 - [x] 【Optimize】优化logo展示逻辑，期望读取本地安装目录中的logo文件
 - [x] 【Feature】 支持Windows下 JetBrains 全家桶快速打开
-- [ ] 【Feature】 支持非JetBrains ToolBox 安装的 全家桶快速打开
+- [x] 【Feature】 支持非JetBrains ToolBox 安装的 全家桶快速打开
 
 ## 参考
 
