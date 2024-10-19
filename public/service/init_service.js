@@ -92,7 +92,7 @@ class InitService {
                     this.channels[appName] = channelInfo
                 }
                 console.debug("channels:")
-                console.info(this.channels)
+                console.debug(this.channels)
             })
     }
 
@@ -112,7 +112,7 @@ class InitService {
 
             // 判断文件是否存在
             if (!fs.existsSync(recentProjectsFile)) {
-                console.info("文件不存在:" + recentProjectsFile)
+                console.debug("文件不存在:" + recentProjectsFile)
                 return
             }
 
@@ -155,7 +155,7 @@ class InitService {
                 };
             }
         })
-        console.info("初始化完成", this.recentProjects)
+        console.debug("初始化完成", this.recentProjects)
     }
 }
 
