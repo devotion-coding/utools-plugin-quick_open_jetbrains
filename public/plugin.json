@@ -4,9 +4,10 @@
   "features": [
     {
       "code": "all",
-      "explain": "快速打开 jetbrains 最近项目",
+      "explain": "快速打开 jetbrains IDE 全家桶项目",
       "logo": "./logo/jet_brain_logo.png",
       "cmds": [
+        "IDE",
         "JetBrains",
         "History",
         "KK",
