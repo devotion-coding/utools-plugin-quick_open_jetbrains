@@ -1,5 +1,5 @@
 {
-  "logo": "./logo/jet_brain_logo.png",
+  "logo": "jet_brain_logo.png",
   "preload": "preload.js",
   "features": [
     {
