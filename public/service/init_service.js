@@ -62,9 +62,13 @@ class InitService {
                     let logo_path = '';
                     if (utools.isWindows()) {
                         // windows
-                        appName = targetApp.appName + ".app";
+                        appName = targetApp.appName;
                         installLocation = targetApp.InstallLocation
                         appInfoFilePath = installLocation + '/product-info.json'
+                        if(!fs.existsSync(appInfoFilePath)){
+                            console.debug("product-info.json文件不存在:" + appInfoFilePath)
+                            continue
+                        }
                         let appInfoFileData = fs.readFileSync(appInfoFilePath);
                         appInfoFileData = JSON.parse(appInfoFileData)
                         dataDirectoryName = appInfoFileData.dataDirectoryName;
@@ -72,9 +76,13 @@ class InitService {
                         logo_path = utools.getFileIcon(launchCommand)
                     } else {
                         // mac
-                        appName = targetApp.appName;
+                        appName = targetApp.appName + ".app";
                         installLocation = targetApp.app_dir + "/" + appName;
                         appInfoFilePath = installLocation + "/Contents/Resources/product-info.json"
+                        if(!fs.existsSync(appInfoFilePath)){
+                            console.debug("product-info.json文件不存在:" + appInfoFilePath)
+                            continue
+                        }
                         let appInfoFileData = fs.readFileSync(appInfoFilePath);
                         appInfoFileData = JSON.parse(appInfoFileData)
                         dataDirectoryName = appInfoFileData.dataDirectoryName;
