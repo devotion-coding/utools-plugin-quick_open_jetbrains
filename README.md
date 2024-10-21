@@ -21,33 +21,37 @@
 ## 安装
 
 - 应用市场安装
-    - 打开插件应用市场搜索 **JetBrains IDE Quick Open**
+    - 打开插件应用市场搜索 **JetBrains IDE 快开**
 
-![应用市场安装](doc_resource%2F78dfg765df65g7ds5.png)
+![应用市场安装](doc_resource/search_plugin.png)
 
 - upx文件离线安装
     - 从 <a href="https://github.com/devotion-coding/utools-plugin-quick_open_jetbrains/releases"> releases </a> 下载
       upx 安装
     - 复制安装包，utools搜索框中粘贴，安装插件
 
-![离线包安装](doc_resource%2F67fd6gh78df6g8d6.png)
+![离线包安装](doc_resource/install_by_upx.png)
 
 - 自编译安装
-    - 下载源码，修改后通过 utools 开发者工具重新打包、安装
+    - 下载源码
+    - 进入项目，进入public目录，执行 npm i 安装依赖
+    - 通过 utools 开发者工具重新打包、安装
 
-![离线打包](doc_resource%2Fd6f7gad687g6df8g68d.png)
+![离线打包](doc_resource/install_by_build.png)
 
 ## 快速开始
 
-- 快速打开 JetBrains IDE 全家桶最近项目列表
-    - 功能关键字
+- 输入关键字唤起插件
+    - 插件功能关键字
         - IDE
         - JetBrains
         - history
         - kk
         - jetHistory
+- 输入项目名称开始搜索
+- 通过上下键选择项目后回车，即可打开项目
 
-![使用演示](doc_resource%2F7gds78g687ds6g8sd6g9.png)
+![使用演示](doc_resource/use.png)
 
 -------------
 
