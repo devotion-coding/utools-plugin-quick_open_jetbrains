@@ -76,7 +76,7 @@ class InitService {
                         logo_path = utools.getFileIcon(launchCommand)
                     } else {
                         // mac
-                        appName = targetApp.appName + ".app";
+                        appName = targetApp.appName;
                         installLocation = targetApp.app_dir + "/" + appName;
                         appInfoFilePath = installLocation + "/Contents/Resources/product-info.json"
                         if(!fs.existsSync(appInfoFilePath)){
