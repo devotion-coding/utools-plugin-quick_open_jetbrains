@@ -3,7 +3,7 @@
 </h1>
 
 <p align="center">
-🛠️utools 快开 jetbrains 产品最近项目的工具
+🛠️utools 快开 jetbrains IDE 最近项目的工具
 </p>
 
 <p align="center">
