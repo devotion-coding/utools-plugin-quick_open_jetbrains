@@ -6,6 +6,10 @@
 🛠️utools 快开 jetbrains 产品最近项目的工具
 </p>
 
+<p align="center">
+【项目地址： <a href="https://github.com/devotion-coding/utools-plugin-quick_open_jetbrains"> Github </a> | <a href="https://gitee.com/TianDaDaDaDa/utools-plugin-quick_open_jetbrains"> Gitee</a> 】
+</p>
+
 ## 功能特性
 
 - 支持JetBrains IDE 全家桶应用快速打开
