@@ -71,10 +71,11 @@
 
 ## Todo list
 
-- [x] 【Feature】支持MacOs下 JetBrains 全家桶快速打开
-- [x] 【Optimize】优化logo展示逻辑，期望读取本地安装目录中的logo文件
+- [x] 【Feature】 支持MacOs下 JetBrains 全家桶快速打开
+- [x] 【Optimize】 优化logo展示逻辑，期望读取本地安装目录中的logo文件
 - [x] 【Feature】 支持Windows下 JetBrains 全家桶快速打开
 - [x] 【Feature】 支持非JetBrains ToolBox 安装的 全家桶快速打开
+- [ ]  【Feature】 添加JetBrains IDE各应用子入口
 
 ## 参考
 
